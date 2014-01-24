@@ -12,10 +12,16 @@ class NeedsController < ApplicationController
     if org = params["organisation_id"] and org.present?
       scope = scope.where(:organisation_ids => org)
     end
+
+    extra_fields = [:met_when].select do |field_name|
+      params["show_#{field_name}"] == "1"
+    end
+
     @needs = scope.page(params[:page])
 
     set_expiry 0
-    render json: NeedResultSetPresenter.new(@needs, view_context).as_json
+    presenter = NeedResultSetPresenter.new(@needs, view_context, extra_fields)
+    render json: presenter.as_json
   end
 
   def show

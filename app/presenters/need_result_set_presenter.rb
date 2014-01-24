@@ -1,7 +1,8 @@
 class NeedResultSetPresenter
-  def initialize(needs, view_context)
+  def initialize(needs, view_context, extra_fields = [])
     @needs = needs
     @view_context = view_context
+    @extra_fields = extra_fields
   end
 
   def as_json
@@ -22,7 +23,7 @@ class NeedResultSetPresenter
   private
   def results
     @needs.map {|need|
-      BasicNeedPresenter.new(need).present
+      BasicNeedPresenter.new(need, @extra_fields).present
     }
   end
 
